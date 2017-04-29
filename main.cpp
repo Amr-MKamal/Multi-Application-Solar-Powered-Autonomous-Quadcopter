@@ -34,54 +34,62 @@ int main(int argc){
 	(void) sched_setaffinity(0, sizeof(mask), &mask); //make it void
 	gpioInitialise();
 	get_motorSettings();
-	set_motorsettings();
+	set_motorsettings(default_pwm);
 while (1){
 	switch (argc){
 // get button from php to call this code and execute the function
 	case 1 :
-standard_forward();break;
+if(ison){standard_forward();}
+	 if(!airborn){airborn=1;}
+	 break;
 	case 2 :	
-standard_left();break;
+if(ison){standard_left();}
+	 if(!airborn){airborn=1;}break;
 	case 3 :
-standard_right();
-			break;
+if(ison){standard_right();}
+			
+	 if(!airborn){airborn=1;}break;
 	case 4 :
-standard_backward();break;		
+if(ison){standard_backward();}
+	 if(!airborn){airborn=1;}break;	
 case 5 :
-standard_yaw();break;	
+if(ison){standard_yaw();}
+	 if(!airborn){airborn=1;}break;	
 case 6 :
-standard_up();break;
+if(ison){standard_up();}
+	 if(!airborn){airborn=1;}break;
 case 7 :
-standard_down();break;
+if(ison){standard_down();}
+	 if(!airborn){airborn=1;}break;
 case 8 :
 testincrease();break;
 case 9 :
 testdecrease();break;
-land_q();break;
+
 case 10 :
 //changing range	
-global_pwmhov=(pwm_range/100)*global_pwmhov;
-pwm_range=100; 
-set_motorSettings();
+global_pwmhov=(get_pwmR()*global_pwmhov)/100;
+set_motorSettings(100);
 break;
 case 11 :
 //changing range	
-global_pwmhov=(pwm_range/255)*global_pwmhov;
-pwm_range=255; 
-set_motorSettings();
+global_pwmhov=(get_pwmR()*global_pwmhov)/255;
+set_motorSettings(255);
 break;
 case 12 :
 //changing range	
-global_pwmhov=(pwm_range/1000)*global_pwmhov;
-pwm_range=1000; 
-set_motorSettings();
+global_pwmhov=(get_pwmR()*global_pwmhov)/1000;
+set_motorSettings(1000);
 break;
 case 13:
 ison=1;break;
 case 14:
 	ison=0;
  if(airborn)
- {}
+ {
+	 land_q();
+ airborn=0;
+ }
 			
 			
 	}
