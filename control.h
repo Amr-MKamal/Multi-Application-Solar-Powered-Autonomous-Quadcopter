@@ -5,8 +5,7 @@
 #include <pigpio.h>
 #include <sched.h>
 #include <math.h>
-#define SUCCESS 0
-#define pwm_range 255 //default but can change 
+#define SUCCESS 0 
 #define wmax 1400   //motor max
 #define mass 1.5 //mass 
 #define g 9.81 //gravity 
