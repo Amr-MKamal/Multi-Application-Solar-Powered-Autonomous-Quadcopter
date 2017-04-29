@@ -20,7 +20,7 @@
 //http://www.simunova.com/node/33
 using namespace std;
 int global_pwmhov ;
-
+int pwm_range=255;
 
 void hover_q(void){
  (void)	gpioPWM(motor1,global_pwmhov);
@@ -167,8 +167,8 @@ void get_motorSettings(void){
 	global_pwmhov=w/wmax * pwm_range;
 }
 void set_motorSettings(void){
-	// gpioSetPWMrange(motor_pins,pwm_range);  // to set the resulation
-	// gpioSetMode(motor_pins,PI_OUTPUT); // set direction
+	 gpioSetPWMrange(motor_pins,pwm_range);  // to set the resulation , do it 4 times 
+	gpioSetMode(motor_pins,PI_OUTPUT); // set direction
 }
 void land_q(void){
 (void)	gpioPWM(motor1,global_pwmhov--);
@@ -187,3 +187,5 @@ void fullstop(void){
  (void)	gpioPWM(motor3,0);
  (void)	gpioPWM(motor4,0);
 }
+void testincrease(void) {global_pwmhov++;}
+void testdecrease(void) {global_pwmhov--;}
