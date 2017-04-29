@@ -24,6 +24,8 @@
 //http://arma.sourceforge.net/docs.html
 //http://eigen.tuxfamily.org/index.php?title=Main_Page
 //http://www.simunova.com/node/33
+int airborn=0; 
+int ison=0; 
 using namespace std;
 int main(int argc){
 	cpu_set_t  mask;
@@ -37,27 +39,51 @@ while (1){
 	switch (argc){
 // get button from php to call this code and execute the function
 	case 1 :
- //starting off
- hover_q(); break;
-	case 2 :
-		standard_forward();break;
-	case 3 :
-   standard_backward();break;
-	case 4 :
-standard_right();break;
-	case 5 :
+standard_forward();break;
+	case 2 :	
 standard_left();break;
+	case 3 :
+standard_right();
+			break;
+	case 4 :
+standard_backward();break;		
+case 5 :
+standard_yaw();break;	
 case 6 :
 standard_up();break;
 case 7 :
 standard_down();break;
 case 8 :
-standard_yaw();break;
+testincrease();break;
 case 9 :
+testdecrease();break;
 land_q();break;
 case 10 :
-fullstop();break;
-
+//changing range	
+global_pwmhov=(pwm_range/100)*global_pwmhov;
+pwm_range=100; 
+set_motorSettings();
+break;
+case 11 :
+//changing range	
+global_pwmhov=(pwm_range/255)*global_pwmhov;
+pwm_range=255; 
+set_motorSettings();
+break;
+case 12 :
+//changing range	
+global_pwmhov=(pwm_range/1000)*global_pwmhov;
+pwm_range=1000; 
+set_motorSettings();
+break;
+case 13:
+ison=1;break;
+case 14:
+	ison=0;
+ if(airborn)
+ {}
+			
+			
 	}
 
 }
