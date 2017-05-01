@@ -21,7 +21,7 @@
 using namespace std;
 int global_pwmhov ;
 int pwm_range=255;
-
+#define default_pwm 255
 void hover_q(void){
  (void)	gpioPWM(motor1,global_pwmhov);
  (void)	gpioPWM(motor2,global_pwmhov);
@@ -166,8 +166,9 @@ void get_motorSettings(void){
 		int w=sqrt(mass*g/4*k);;
 	global_pwmhov=w/wmax * pwm_range;
 }
-void set_motorSettings(void){
-	 gpioSetPWMrange(motor_pins,pwm_range);  // to set the resulation , do it 4 times 
+void set_motorSettings(int pwm_r){
+	pwm_range=pwm_r;
+	 gpioSetPWMrange(motor_pins,pwm_range]);  // to set the resulation , do it 4 times 
 	gpioSetMode(motor_pins,PI_OUTPUT); // set direction
 }
 void land_q(void){
@@ -189,3 +190,4 @@ void fullstop(void){
 }
 void testincrease(void) {global_pwmhov++;}
 void testdecrease(void) {global_pwmhov--;}
+int get_pwmR(void){return pwm_range;}
