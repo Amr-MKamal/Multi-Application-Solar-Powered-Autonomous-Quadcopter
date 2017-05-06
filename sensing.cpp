@@ -18,3 +18,9 @@ ObtenirOrientation(float &pitch, float &roll, float & yaw);
     humidite->humidityRead(imuData);
 return imuData.humidity;
 */
+   /* from sense_hat import SenseHat
+
+sense = SenseHat()
+raw = sense.get_accelerometer_raw()
+print("x: {x}, y: {y}, z: {z}".format(**raw))
+*/
