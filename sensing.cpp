@@ -25,3 +25,14 @@ sense = SenseHat()
 raw = sense.get_accelerometer_raw()
 print("x: {x}, y: {y}, z: {z}".format(**raw))
 */
+/*
+
+   data = Hat->get_accel();
+   while (!data.valid)
+   {
+      delay(100);
+      data = Hat->get_accel();
+   }
+std::cout << "Accel: {" << data.x << "," << data.y << "," << data.z << "}" << std::endl;
+*/
+
