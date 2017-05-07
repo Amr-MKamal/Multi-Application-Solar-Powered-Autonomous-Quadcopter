@@ -15,6 +15,7 @@ ObtenirOrientation(float &pitch, float &roll, float & yaw);
 */
 //get data like 
    /* RTIMU_DATA imuData = imu->getIMUData();
+   get_accel();
     humidite->humidityRead(imuData);
 return imuData.humidity;
 */
