@@ -35,4 +35,5 @@ print("x: {x}, y: {y}, z: {z}".format(**raw))
    }
 std::cout << "Accel: {" << data.x << "," << data.y << "," << data.z << "}" << std::endl;
 */
+//getline(inputFile, line)
 
