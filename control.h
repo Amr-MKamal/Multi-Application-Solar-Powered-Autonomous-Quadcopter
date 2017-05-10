@@ -14,10 +14,10 @@
 #define Ixx //moment of inertia calculated value
 #define Iyy
 #define Izz
-#define motor1 1  //input pins for pwm
-#define motor2 3
-#define motor3 5
-#define motor4 7
+#define motor1 4  //it's actually 7 https://pinout.xyz/#
+#define motor2 17 //actuall 11 , and 9 is a ground
+#define motor3 18 //actuall 12 
+#define motor4 27 // actuall 13 and 14 is a ground 
 void hover_q(void);
 void standard_forward(void);
 void standard_backward(void);
