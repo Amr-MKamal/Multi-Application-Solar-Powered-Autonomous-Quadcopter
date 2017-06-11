@@ -5,13 +5,25 @@ sense = SenseHat()
 # msleep or time.sleep
 sense.set_imu_config(True, True, True)
 orientation = sense.get_orientation()
-Yaw=orientation['yaw']
-Roll=orientation['roll']
-Pitch=orientation['pitch'] #all in degrees
+yaw=orientation['yaw']
+roll=orientation['roll']
+pitch=orientation['pitch'] #all in degrees
+myfile.write("%s\n" % yaw)
+
+#myfile.writelines or target.write
+#or    myfile.writelines('Mage')[1]
+#https://stackoverflow.com/questions/4719438/editing-specific-line-in-text-file-in-python
+#accel data in g
 raw = sense.get_accelerometer_raw()
-xdotdot=raw['x']
-ydotdot=raw['y']
-zdotdot=raw['z']
+xdotdot= acceleration['x']
+ydotdot= acceleration['y']
+zdotdot= acceleration['z']
+#angular velocity in rad/sec
+raw = sense.get_gyroscope_raw()
+xp = raw['x']
+yr= raw['y']
+zy= raw['z']
+#north direction as yaw angle in degrees 
 north = sense.get_compass()
 humidity = sense.get_humidity()
 temp = sense.get_temperature()
