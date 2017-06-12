@@ -13,6 +13,7 @@
 //============================================================================
 
 #include "control_v0.h"
+#include "sensing.h"
 
 //http://abyz.co.uk/rpi/pigpio/cif.html
 //http://arma.sourceforge.net/docs.html
@@ -29,6 +30,10 @@ void hover_q(void){
  (void)	gpioPWM(motor4,global_pwmhov);
 }
 void standard_forward(void){
+	//x=0 , y=1 , z=0 
+	ydddesired=kdi*ydot+kpi*(yin-y)+kii*(yininter-yinter)
+	
+	
 		(void)gpioPWM(motor1,global_pwmhov+1); //set time duration 0.4T
 		(void)gpioPWM(motor3,global_pwmhov-1);
 		gpioSleep(0,0,4000);
