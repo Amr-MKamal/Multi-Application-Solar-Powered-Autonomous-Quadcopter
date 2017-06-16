@@ -26,19 +26,28 @@ int intialise=1;}
 time_old=gpioTick();
 return u ;
 }
-
+double u1 ( double z ){
+	double whover=sqrt(mass*g/(Kf*4);
+	u1offest=whover*whover*Kf*4;
+ if(altitude<4){
+double err=z-altitude;
+double U1=PID(err);}
+  else{double U1=0;}
+	return (U1+u1offest);
+	
+}
 double u2 (double pitch_desired){
-err=pitch_desired-pitch
-U2=PID(err);
+double err=pitch_desired-pitch
+double U2=PID(err);
 return U2;
 }
 double u3 (double roll_desired){
-err=roll_desired-roll
-U3=PID(err);
+double err=roll_desired-roll
+double U3=PID(err);
 return U3;
 }
 double u4 (double yaw_desired){
-err=yaw_desired-yaw
-U4=PID(err);
+double err=yaw_desired-yaw
+double U4=PID(err);
 return U4;
 }
