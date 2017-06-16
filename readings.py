@@ -4,12 +4,19 @@ from sense_hat import SenseHat
 sense = SenseHat()
 # msleep or time.sleep
 sense.set_imu_config(True, True, True)
+while(True)
+{
+  #open file readings.txt
+ f=open("readings.txt","w+")
 orientation = sense.get_orientation()
 yaw=orientation['yaw']
 roll=orientation['roll']
 pitch=orientation['pitch'] #all in degrees
 myfile.write("%s\n" % yaw)
-
+#Add (yaw,roll,pitch) to readings.txt
+f.writelines("%s\t" %yaw)
+f.writelines("%s\t" %roll)
+f.writelines("%s\n" %pitch)
 #myfile.writelines or target.write
 #or    myfile.writelines('Mage')[1]
 #https://stackoverflow.com/questions/4719438/editing-specific-line-in-text-file-in-python
@@ -18,13 +25,23 @@ raw = sense.get_accelerometer_raw()
 xdotdot= acceleration['x']
 ydotdot= acceleration['y']
 zdotdot= acceleration['z']
+#Add (xdotdot,ydotdot,zdotdot) to readings.txt
+f.writelines("%s\t" %xdotdot)
+f.writelines("%s\t" %ydotdot)
+f.writelines("%s\n" %zdotdot)
 #angular velocity in rad/sec
 raw = sense.get_gyroscope_raw()
 xp = raw['x']
 yr= raw['y']
 zy= raw['z']
+#Add (xp,yr,zy) to readings.txt
+f.writelines("%s\t" %xp)
+f.writelines("%s\t" %yr)
+f.writelines("%s\n" %zy)
 #north direction as yaw angle in degrees 
 north = sense.get_compass()
+#Add north to readings.txt
+f.write("%s\n" %north)
 humidity = sense.get_humidity()
 temp = sense.get_temperature()
 pressure = sense.get_pressure()
@@ -49,4 +66,9 @@ end
 function omegadot = angular_acceleration(inputs, omega, I, L, b, k)
     tau = torques(inputs, L, b, k);
     omegaddot = inv(I) * (tau - cross(omega, I * omega));
+    #close file readings.txt
+    f.close()
+    #delay for 50ms
+    time.sleep(50/1000.0);
 #end
+}
