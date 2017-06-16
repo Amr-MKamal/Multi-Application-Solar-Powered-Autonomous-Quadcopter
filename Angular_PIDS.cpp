@@ -6,11 +6,6 @@
 #define Kp
 #define Ki
 #define Kd
-
-uint_32 delta_t=0;
-double error_old =0, diff_term =0,double inte_term=0 ,double aggresive=0, E=0, e_dot=0;
-
-
 double u1 ( double z ){
 	double whover=sqrt(mass*g/(Kf*4);
 	u1offest=whover*whover*Kf*4;
