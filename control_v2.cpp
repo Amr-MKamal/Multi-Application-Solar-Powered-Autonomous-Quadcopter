@@ -21,8 +21,14 @@
 //http://www.simunova.com/node/33
 using namespace std;
 int global_pwmhov ;
-int pwm_range=255;
-#define default_pwm 255
+int pwm_range= 20000;
+int pwm_rangemax=2000;
+int pwm_rangemin=1000;
+double U1, U2, U3 , U4 ;
+double w1,w2,w3,w4;
+int pwm1,pwm2,pwm3 , pwm4;
+#define default_pwm 10000
+(void) gpioInitialise();
 void hover_q(void){
  (void)	gpioPWM(motor1,global_pwmhov);
  (void)	gpioPWM(motor2,global_pwmhov);
@@ -30,32 +36,33 @@ void hover_q(void){
  (void)	gpioPWM(motor4,global_pwmhov);
 }
 void standard_forward(void){
-	//x=0 , y=1 , z=0 
-	ydddesired=kdi*ydot+kpi*(yin-y)+kii*(yininter-yinter)
-	
-	
-		(void)gpioPWM(motor1,global_pwmhov+1); //set time duration 0.4T
-		(void)gpioPWM(motor3,global_pwmhov-1);
-		gpioSleep(0,0,4000);
-		hover_q();
-		gpioSleep(0,0,1000);
-		(void)gpioPWM(motor1,global_pwmhov+1);
-		(void)gpioPWM(motor3,global_pwmhov-1);
-		gpioSleep(0,0,1500);
-		hover_q();
-		gpioSleep(0,0,1500);
-		(void)gpioPWM(motor1,global_pwmhov+1);
-		(void)gpioPWM(motor3,global_pwmhov-1);
+	//roll=0 , pitch=10 , yaw=0 ,z=0
+
+	U1=u1(0);
+	U2=u2(10);
+	U3=u3(0);
+	U4=u4(0);
+	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
+	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
+	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
+        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
+	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
+	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
+        w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
+	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
+		(void)gpioPWM(motor1,pwm1); //set time duration 0.4T
+		(void)gpioPWM(motor2,pwm2);
+		(void)gpioPWM(motor3,pwm3);
+		(void)gpioPWM(motor4,pwm4);
 		gpioSleep(0,0,2000);
 		hover_q();
-
 // the next version will calculate distance
 }
 void standard_backward(void){
 	(void)gpioPWM(motor3,global_pwmhov+1); //set time duration 0.4T
 		(void)gpioPWM(motor1,global_pwmhov-1);
 		gpioSleep(0,0,4000);
-		hover_q();
+		hover_q();dd
 		gpioSleep(0,0,1000);
 		(void)gpioPWM(motor3,global_pwmhov+1);
 		(void)gpioPWM(motor1,global_pwmhov-1);
@@ -196,3 +203,13 @@ void fullstop(void){
 void testincrease(void) {global_pwmhov++;}
 void testdecrease(void) {global_pwmhov--;}
 int get_pwmR(void){return pwm_range;}
+double PID ( double err ) {
+	uint_32 time_old=gpioTick();
+	uint_32 delta_t=0;
+	double error_old =0, diff_term =0,double inte_term=0 ,double aggresive=0, E=0, e_dot=0;
+	delta_t=gpioTick()-time_old;
+	E=E+err*delta_t;
+	e_dot=err-error_old
+	
+	
+}
