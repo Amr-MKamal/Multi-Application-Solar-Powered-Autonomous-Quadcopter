@@ -51,8 +51,8 @@ void hover_q(void){
 		hover_q();
 }
 void standard_forward(void){
-	//roll=0 , pitch=10 , yaw=0 ,z=0
-
+	//roll=0 , pitch=10 , yaw=0 ,z=0 10.1>pitch
+while (pitch<9.9){
 	U1=u1(0);
 	U2=u2(10);
 	U3=u3(0);
@@ -69,7 +69,8 @@ void standard_forward(void){
 		(void)gpioPWM(motor2,pwm2);
 		(void)gpioPWM(motor3,pwm3);
 		(void)gpioPWM(motor4,pwm4);
-		gpioSleep(0,0,2000);
+		gpioSleep(0,0,20000);} //sesnor read}
+	gpioSleep(0,1,0);
 		hover_q();
 // the next version will calculate distance
 }
