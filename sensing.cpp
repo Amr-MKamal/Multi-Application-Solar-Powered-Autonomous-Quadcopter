@@ -1,11 +1,54 @@
 #include "sensing.h"
 #include "sensehat.h"
 #include "RTIMULibDrive11.h"
-#include ""
+#include "stdafx.h"
 #include "RTIMULib.h"
+#include<iostream>
+#include<fstream>
+#include<string>
+#include<sstream>
+#include<conio.h>
+using namespace std ;
+
 double pitch , yaw , roll ; 
 double xdotdot,ydotdot, zdotdot; 
 ObtenirOrientation(float &pitch, float &roll, float & yaw);
+
+
+int main()
+{
+	string readerline;
+	string read[16];
+    while(True)
+    {
+        
+	ifstream reader("readings.txt");
+        #check if the file exist
+	if(!reader)
+	{
+		cout<<"there was a problem openning the file..press any key to close";
+		cin.get();
+		return 0;
+	}
+	int i=0;
+    //store reads in array while outputting, skipping blank lines
+	while(reader.good())
+	{
+		getline(reader,readerline,' ');
+
+		if(readerline!="")
+		{
+			read[i]=readerline;
+			cout<<read[i]<<endl;
+			i++;
+		}
+		
+	}
+        #delay for 2ms
+         time.sleep(2/1000.0);
+    }
+}
+
 //functions that will be used const RTVector3& getMeasuredPose() { return m_fusion->getMeasuredPose(); }
 /*
     const RTVector3& getGyro() { return m_imuData.gyro; }   // gets gyro rates in radians/sec
