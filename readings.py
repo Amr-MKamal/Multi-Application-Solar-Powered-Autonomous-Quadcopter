@@ -68,7 +68,7 @@ function omegadot = angular_acceleration(inputs, omega, I, L, b, k)
     omegaddot = inv(I) * (tau - cross(omega, I * omega));
     #close file readings.txt
     f.close()
-    #delay for 50ms
-    time.sleep(50/1000.0);
+    #delay for 2ms
+    time.sleep(2/1000.0);
 #end
 }
