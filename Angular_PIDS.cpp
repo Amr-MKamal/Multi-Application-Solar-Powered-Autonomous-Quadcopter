@@ -8,7 +8,7 @@
 #define Kd
 double u1 ( double z ){
 	double whover=sqrt(mass*g/(Kf*4);
-	u1offest=whover*whover*Kf*4;
+	u1offest=mass*g;
 	  if(z==0){return u1offest ;}
 			   else{
 double err=z-altitude;
@@ -81,6 +81,14 @@ int intialise=1;}
 time_old=gpioTick();
 return u;
 }
+double U_time (double desired_distance, double angle )	{
+	//this is a function to calculate the need pitch or roll to travel a desired distance 
+	return (sqrt((2*desired_distance)/(g*sin(angle*pi/180))));
+	// t=1083 for 1 meter , 766 for 0.5 for 10 angle
+}
+			   
+			   
+			   
 			   /*double PID ( double err,double  ) {
 if(intialise!=1){
 uint_32 delta_t=0;
