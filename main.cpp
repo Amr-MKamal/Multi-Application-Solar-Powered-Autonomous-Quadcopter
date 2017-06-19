@@ -13,6 +13,11 @@
 //============================================================================
 
 #include <iostream>
+#include "stdafsx.h"
+#include <fstream>
+#include <string>
+#include <sstream>
+#include <conio.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -27,16 +32,22 @@
 int airborn=0; 
 int ison=0; 
 using namespace std;
-int main(int argc){
+int main(){
 	cpu_set_t  mask;
 	CPU_ZERO(&mask);
 	CPU_SET(3, &mask);
 	(void) sched_setaffinity(0, sizeof(mask), &mask); //make it void
 	gpioInitialise();
+	ifstream reader("/var/www/html/text.txt");
+	string readerline;
 	get_motorSettings();
 	set_motorsettings(default_pwm);
+	int button;
 while (1){
-	switch (argc){
+	getline(reader,readrline);
+	button=stoi(readrline);
+	
+	switch (button){
 // get button from php to call this code and execute the function
 	case 1 :
 if(ison){standard_forward();}
