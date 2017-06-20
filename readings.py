@@ -6,7 +6,8 @@ sense = SenseHat()
 sense.set_imu_config(True, True, True)
 while(True)
 {
-  #open file readings.txt
+  #open file readings.txt.."w+"Overwrites the existing file if the file exists.
+  #If the file does not exist, creates a new file for reading and writing.
  f=open("readings.txt","w+")
 orientation = sense.get_orientation()
 yaw=orientation['yaw']
