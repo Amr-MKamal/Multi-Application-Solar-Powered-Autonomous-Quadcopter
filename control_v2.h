@@ -18,6 +18,7 @@
 #define motor2 17 //actuall 11 , and 9 is a ground
 #define motor3 18 //actuall 12 
 #define motor4 27 // actuall 13 and 14 is a ground 
+//sense hat pins 2,3,16,18,22,24
 void hover_q(void);
 void standard_forward(void);
 void standard_backward(void);
