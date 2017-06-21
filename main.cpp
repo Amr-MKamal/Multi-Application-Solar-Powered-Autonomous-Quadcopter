@@ -17,7 +17,6 @@
 #include <fstream>
 #include <string>
 #include <sstream>
-#include <conio.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
@@ -37,18 +36,26 @@ int main(){
 	CPU_ZERO(&mask);
 	CPU_SET(3, &mask);
 	(void) sched_setaffinity(0, sizeof(mask), &mask); //make it void
-	gpioInitialise();
-	ifstream reader("/var/www/html/text.txt");
-	ofstream out_data("/var/www/html/text.txt");
-	string readerline;
-	int writeline=42 ;
-	get_motorSettings();
-	set_motorsettings(default_pwm);
-	int button;
+	int volatile button=42;
+	init();
+    fstream ofile;
+	//open readings.tx/var/www/html/text.txtt
+    string line;
 while (1){
-	getline(reader,readrline);
-	button=stoi(readrline);
-	out_data<<writeline;
+	 ofile.open("/home/pi/Desktop/webips.txt", ios::in );
+
+	//read data from file readings.txt
+    getline(ofile, line) ;
+    button=atoi(line.c_str());
+	//close file
+	ofile.close();
+	//open file again and clear its previos contents
+	ofile.open("/home/pi/Desktop/webips.txt", ios::out|ios::trunc);
+	//write data to the file
+    ofile << "42";
+	//close the file
+    ofile.close();
+
 	switch (button){
 // get button from php to call this code and execute the function
 	case 1 :
