@@ -34,7 +34,7 @@ void hover_q(void){
 	U1=u1(0);
 	U2=u2(0);
 	U3=u3(0);
-	U4=u4(0);
+	U4=u4(0); //yaw should not be controllred 
 	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
 	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
 	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
