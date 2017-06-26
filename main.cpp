@@ -13,7 +13,6 @@
 //============================================================================
 
 #include <iostream>
-#include "stdafsx.h"
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -23,6 +22,7 @@
 #include <pigpio.h>
 #include <sched.h>
 #include "control_v0.h"
+#include "sensing.h"
 
 //http://abyz.co.uk/rpi/pigpio/cif.html
 //http://arma.sourceforge.net/docs.html
@@ -59,8 +59,8 @@ while (1){
 	switch (button){
 // get button from php to call this code and execute the function
 	case 1 :
-if(ison){standard_forward();}
-	 if(!airborn){airborn=1;}
+standard_forward();
+	
 	 break;
 	case 2 :	
 if(ison){standard_left();}
