@@ -7,9 +7,9 @@
 #include<conio.h>
 using namespace std ;
 
-double pitch , yaw , roll ; 
-double xdotdot,ydotdot, zdotdot; 
-double pitchdot, yawdot , rolldot;
+double volatile pitch , yaw , roll ; 
+double volatile xdotdot,ydotdot, zdotdot; 
+double volatile pitchdot, yawdot , rolldot;
 int main()
 {
 	string readerline;
