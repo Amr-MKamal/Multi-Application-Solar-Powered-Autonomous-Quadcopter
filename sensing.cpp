@@ -1,8 +1,5 @@
 #include "sensing.h"
 #include "sensehat.h"
-#include "RTIMULibDrive11.h"
-#include "stdafx.h"
-#include "RTIMULib.h"
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -12,9 +9,7 @@ using namespace std ;
 
 double pitch , yaw , roll ; 
 double xdotdot,ydotdot, zdotdot; 
-ObtenirOrientation(float &pitch, float &roll, float & yaw);
-
-
+double pitchdot, yawdot , rolldot;
 int main()
 {
 	string readerline;
@@ -22,7 +17,7 @@ int main()
     while(True)
     {
         
-	ifstream reader("readings.txt");
+	ifstream reader("/home/pi/Desktop/readings.txt");
         #check if the file exist
 	if(!reader)
 	{
@@ -44,39 +39,19 @@ int main()
 		}
 		
 	}
+        yaw=strtod(read[0].c_str(),NULL);
+        roll=strtod(read[1].c_str(),NULL);
+        pitch=strtod(read[2].c_str(),NULL);
+        xdotdot=strtod(read[3].c_str(),NULL);
+	ydotdot=strtod(read[4].c_str(),NULL);
+	zdotdot=strtod(read[5].c_str(),NULL);
+        pitchdot=strtod(read[6].c_str(),NULL);
+        rolldot=strtod(read[7].c_str(),NULL);
+	yawdot=strtod(read[8].c_str(),NULL);
         #delay for 2ms
          time.sleep(2/1000.0);
     }
 }
 
-//functions that will be used const RTVector3& getMeasuredPose() { return m_fusion->getMeasuredPose(); }
-/*
-    const RTVector3& getGyro() { return m_imuData.gyro; }   // gets gyro rates in radians/sec
-    const RTVector3& getAccel() { return m_imuData.accel; } // get accel data in gs
-    const RTVector3& getCompass() { return m_imuData.compass; } // gets compass data in uT
 
-*/
-//get data like 
-   /* RTIMU_DATA imuData = imu->getIMUData();
-   get_accel();
-    humidite->humidityRead(imuData);
-return imuData.humidity;
-*/
-   /* from sense_hat import SenseHat
-
-sense = SenseHat()
-raw = sense.get_accelerometer_raw()
-print("x: {x}, y: {y}, z: {z}".format(**raw))
-*/
-/*
-
-   data = Hat->get_accel();
-   while (!data.valid)
-   {
-      delay(100);
-      data = Hat->get_accel();
-   }
-std::cout << "Accel: {" << data.x << "," << data.y << "," << data.z << "}" << std::endl;
-*/
-//getline(inputFile, line)
 
