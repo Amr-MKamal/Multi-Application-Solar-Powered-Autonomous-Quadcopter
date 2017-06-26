@@ -43,7 +43,7 @@ int intialise=1;}
 	if (delta_t !=0){ diff_term=e_dot/delta_t ;}
   else {diff_tem=0;}
   inte_term=E*delta_t;
-  double u = Kp*error +Ki*inte_term+Kd*diff_term;
+  double u = Kppr*error +Kipr*inte_term+Kdpr*diff_term;
 time_old=gpioTick();
 return u;
 }
@@ -60,7 +60,7 @@ int intialise=1;}
 	if (delta_t !=0){ diff_term=e_dot/delta_t ;}
   else {diff_tem=0;}
   inte_term=E*delta_t;
-  double u = Kp*error +Ki*inte_term+Kd*diff_term;
+  double u = Kppr*error +Kipr*inte_term+Kdpr*diff_term;
 time_old=gpioTick();
 return u;
 }
@@ -77,7 +77,7 @@ int intialise=1;}
 	if (delta_t !=0){ diff_term=e_dot/delta_t ;}
   else {diff_tem=0;}
   inte_term=E*delta_t;
-  double u = Kp*error +Ki*inte_term+Kd*diff_term;
+  double u = Kpy*error +Kiy*inte_term+Kdy*diff_term;
 time_old=gpioTick();
 return u;
 }
