@@ -12,12 +12,13 @@ double volatile xdotdot,ydotdot, zdotdot;
 double volatile pitchdot, yawdot , rolldot;
 int main()
 {
+	string myArray[7];
 	string read[16];
     while(True)
     {
         
 	ifstream reader("/home/pi/Desktop/readings.txt");
-        #check if the file exist
+        //check if the file exist
 	if(!reader)
 	{
 		cout<<"there was a problem openning the file..press any key to close";
@@ -28,13 +29,13 @@ int main()
     //store reads in array while outputting, skipping blank lines
 	while(reader.good())
 	{
-	 string myArray[7];
-	#add the contents of the readings.txt to an array"myArray"
+	 
+	//add the contents of the readings.txt to an array"myArray"
 	for(int i = 0; i < 7; ++i)
         {
 			reader >> myArray[i];
         }
-      #use the contents of the array
+      //use the contents of the array
 		
 		
 	}
