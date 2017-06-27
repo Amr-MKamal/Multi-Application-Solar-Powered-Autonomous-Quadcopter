@@ -12,7 +12,6 @@ double volatile xdotdot,ydotdot, zdotdot;
 double volatile pitchdot, yawdot , rolldot;
 int main()
 {
-	string readerline;
 	string read[16];
     while(True)
     {
@@ -29,14 +28,14 @@ int main()
     //store reads in array while outputting, skipping blank lines
 	while(reader.good())
 	{
-		getline(reader,readerline,' ');
-
-		if(readerline!="")
-		{
-			read[i]=readerline;
-			cout<<read[i]<<endl;
-			i++;
-		}
+	 string myArray[7];
+	#add the contents of the readings.txt to an array"myArray"
+	for(int i = 0; i < 7; ++i)
+        {
+			reader >> myArray[i];
+        }
+      #use the contents of the array
+		
 		
 	}
         yaw=strtod(read[0].c_str(),NULL);
