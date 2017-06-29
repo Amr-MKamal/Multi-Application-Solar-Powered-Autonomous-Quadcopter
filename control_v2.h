@@ -27,7 +27,5 @@ void standard_left(void);
 void standard_yaw(void);
 void standard_up(void);
 void standard_down(void);
-void get_motorSettings(void);
-void set_motorSettings(void);
 void land_q(void);
 void fullstop(void);
