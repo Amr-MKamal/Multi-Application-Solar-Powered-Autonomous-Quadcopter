@@ -1,4 +1,4 @@
-#include "driver.h"
+#include "ESCdriver.h"
 
 using namespace std;
 
@@ -52,6 +52,5 @@ void stop ()
             gpioServo(E[g], 0);
             cout <<g<<"is Stopped"<<endl;
     }
-    gpioTerminate();
-    time_sleep(0.5);
+
 }
