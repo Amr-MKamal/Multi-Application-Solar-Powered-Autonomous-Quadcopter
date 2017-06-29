@@ -12,220 +12,139 @@
 //becomes the parent process and the newly created process becomes the child process
 //============================================================================
 
-#include "control_v0.h"
+#include "control_v2.h"
 #include "sensing.h"
 #include "Angular_PIDS.h"
+#include "ESCdriver.h"
+#include "math.h"
 //http://abyz.co.uk/rpi/pigpio/cif.html
 //http://arma.sourceforge.net/docs.html
 //http://eigen.tuxfamily.org/index.php?title=Main_Page
 //http://www.simunova.com/node/33
 using namespace std;
-int global_pwmhov ;
-int pwm_range= 20000;
-int pwm_rangemax=2000;
-int pwm_rangemin=1000;
 double U1, U2, U3 , U4 ;
 double w1,w2,w3,w4;
+int tolerance=42; //yah magical number 
 int pwm1,pwm2,pwm3 , pwm4;
-#define default_pwm 10000
-(void) gpioInitialise();
+//define default_pwm 10000
 //function to intialise with minmum
 void hover_q(void){
+	tolerance=42;
+	while(tolerance >2){
 	U1=u1(0);
 	U2=u2(0);
 	U3=u3(0);
-	U4=u4(0); //yaw should not be controllred 
-	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
-	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
+	U4=u4(0); //yaw should not be controllred
+	w1=sqrt((U1/(4*Kf) + U3/(2*Kf) + U4/(4*Km))); //control equations 
 	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
-        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
 	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
-	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
         w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
-	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
-		(void)gpioPWM(motor1,pwm1); //set time duration 0.4T
-		(void)gpioPWM(motor2,pwm2);
-		(void)gpioPWM(motor3,pwm3);
-		(void)gpioPWM(motor4,pwm4);
-		gpioSleep(0,0,2000);
-		hover_q();
+		 pwm(E1,w1); //apply new omegas
+		 pwm(E2,w2); //written in this way to simplify the understanding of equations
+		 pwm(E3,w3);
+		 pwm(E4,w4);
+		tolerance=(int)sqrt(pitch*pitch+yaw*yaw); //minimize the control error with torllence less than 1.1%
+		usleep(3000); //2 ms for sensor refresh + 1 ms for operations and effects to take order
+	}
+	
+		
 }
 void standard_forward(void){
 	//roll=0 , pitch=10 , yaw=0 ,z=0 10.1>pitch
-while (pitch<9.9){
+	tolerance=42; //restting the value
+while (tolerance>1)
+{ 
+	//actually this not very accurate , roll should be controlled too , PID is not very smart
 	U1=u1(0);
 	U2=u2(10);
 	U3=u3(0);
 	U4=u4(0);
-	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
-	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
-	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
-        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
-	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
-	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
-        w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
-	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
-		(void)gpioPWM(motor1,pwm1); //set time duration 0.4T
-		(void)gpioPWM(motor2,pwm2);
-		(void)gpioPWM(motor3,pwm3);
-		(void)gpioPWM(motor4,pwm4);
-		gpioSleep(0,0,20000);} //sesnor read}
-	gpioSleep(0,1,0);
-		hover_q();
-// the next version will calculate distance
+	applychanges(U1,U2,U3,U4);
+	usleep(3000);  
+	tolerance= (int)(sqrt((pitch-10)*(pitch-10)*10); 
+  }
+			
+
 }
 void standard_backward(void){
 	//roll=0 , pitch=-10 , yaw=0 ,z=0
-
+	tolerance=42;
+while (tolerance>1)
+{ 
 	U1=u1(0);
-	U2=u2(-10);
+	U2=u2(10);
 	U3=u3(0);
 	U4=u4(0);
-	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
-	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
-	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
-        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
-	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
-	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
-        w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
-	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
-		(void)gpioPWM(motor1,pwm1); //set time duration 0.4T
-		(void)gpioPWM(motor2,pwm2);
-		(void)gpioPWM(motor3,pwm3);
-		(void)gpioPWM(motor4,pwm4);
-	double err=-10-pitch;
-	if (err>0.1 )
-		gpioSleep(0,0,2000);
-		hover_q();
+	applychanges(U1,-U2,U3,U4);
+		usleep(3000);
+	tolerance= (int)(sqrt((pitch+10)*(pitch+10)*10); //make sure pitch can take negative values
+  }
 }
 void standard_right(void){
 	//roll=10 , pitch=0 , yaw=0 ,z=0
-
+	tolerance=42;
+	while (tolerance>1)
+{ 
 	U1=u1(0);
 	U2=u2(0);
 	U3=u3(10);
 	U4=u4(0);
-	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
-	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
-	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
-        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
-	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
-	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
-        w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
-	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
-		(void)gpioPWM(motor1,pwm1); //set time duration 0.4T
-		(void)gpioPWM(motor2,pwm2);
-		(void)gpioPWM(motor3,pwm3);
-		(void)gpioPWM(motor4,pwm4);
-		gpioSleep(0,0,2000);
-		hover_q();
+applychanges(U1,U2,U3,U4);
+	usleep(3000);
+	tolerance= (int)(sqrt((roll-10)*(roll-10)*10); 
+			  }
 }
 void standard_left(void){
 	//roll=-10 , pitch=0 , yaw=0 ,z=0
-
+	tolerance=42;
+while (tolerance>1)
 	U1=u1(0);
 	U2=u2(0);
-	U3=u3(-10);
+	U3=u3(10);
 	U4=u4(0);
-	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
-	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
-	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
-        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
-	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
-	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
-        w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
-	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
-		(void)gpioPWM(motor1,pwm1); //set time duration 0.4T
-		(void)gpioPWM(motor2,pwm2);
-		(void)gpioPWM(motor3,pwm3);
-		(void)gpioPWM(motor4,pwm4);
-		gpioSleep(0,0,2000);
-		hover_q();
+	applychanges(U1,U2,-U3,U4);
+	usleep(3000);
+	tolerance= (int)(sqrt((roll+10)*(roll+10)*10); 
 }
 void standard_yaw(void){
-	//roll=0 , pitch=0 , yaw=10 ,z=0
-
+	//roll=0 , pitch=0 , yaw=45 ,z=0
+	torlerance=42;
+while (tolerance>1){
 	U1=u1(0);
 	U2=u2(0);
 	U3=u3(0);
-	U4=u4(10);
-	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
-	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
-	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
-        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
-	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
-	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
-        w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
-	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
-		(void)gpioPWM(motor1,pwm1); //set time duration 0.4T
-		(void)gpioPWM(motor2,pwm2);
-		(void)gpioPWM(motor3,pwm3);
-		(void)gpioPWM(motor4,pwm4);
-		gpioSleep(0,0,2000);
-		hover_q();
+	U4=u4(90);
+	applychanges(U1,U2,U3,U4);
+	usleep(3000);
+	tolerance= (int)(sqrt((yaw-45)*(yaw-45)*10); 
+	
 }
+			 }
 void standard_up(void){
 		//roll=0 , pitch=0 , yaw=0 ,z=10
-
-	U1=u1(0);
+ //no loops needed here , ( no control )
+	U1=u1(0)*1.1;
 	U2=u2(0);
 	U3=u3(0);
 	U4=u4(0);
-	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
-	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
-	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
-        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
-	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
-	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
-        w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
-	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
-		(void)gpioPWM(motor1,pwm1+10); //set time duration 0.4T
-		(void)gpioPWM(motor2,pwm2+10);
-		(void)gpioPWM(motor3,pwm3+10);
-		(void)gpioPWM(motor4,pwm4+10);
-		gpioSleep(0,0,2000);
-		hover_q();
-
+	applychanges(U1,U2,U3,U4);
+	usleep(3000);
+		 
 }
 void standard_down(void){
 		//roll=0 , pitch=0 , yaw=0 ,z=10
 
-	U1=u1(0);
+	U1=u1(0)*0.9;
 	U2=u2(0);
 	U3=u3(0);
 	U4=u4(0);
-	w1=sqrt(U1/(4*Kf)+ U3/(2*Kf) + U4/(4*Km) );
-	pwm1=(int)((w1/wmax+1) *pwm_rangemin);
-	w2=sqrt(U1/(4*Kf) - U2/(2*Kf) - U4/(4*Km) );
-        pwm2=(int)((w2/wmax+1) *pwm_rangemin);
-	w3=sqrt(U1/(4*Kf) - U3/(2*Kf) + U4/(4*Km) );
-	pwm3=(int)((w3/wmax+1) *pwm_rangemin);
-        w4=sqrt(U1/(4*Kf) + U2/(2*Kf) - U4/(4*Km) );
-	pwm4=(int)((w4/wmax+1) *pwm_rangemin);
-		(void)gpioPWM(motor1,pwm1-10); //set time duration 0.4T
-		(void)gpioPWM(motor2,pwm2-10);
-		(void)gpioPWM(motor3,pwm3-10);
-		(void)gpioPWM(motor4,pwm4-10);
-		gpioSleep(0,0,2000);
-		hover_q();
+	applychanges(U1,U2,U3,U4);
+	usleep(3000);
 
 }
-/*void get_motorSettings(void){
 
-	//f=cons mg ;
-		//k^w2=mg
-	//Kf 6.11*10^-8
-		//Km 1.5*10-9
-		int w=sqrt(mass*g/4*k);;
-	global_pwmhov=w/wmax * pwm_range;
-} */
-/*void set_motorSettings(int pwm_r){
-	pwm_range=pwm_r;
-	 gpioSetPWMrange(motor_pins,pwm_range]);  // to set the resulation , do it 4 times 
-	gpioSetMode(motor_pins,PI_OUTPUT); // set direction
-} */
 void land_q(void){
-
+//under devlopment still
 	U1=u1(4); //in cm
 	U2=u2(0);
 	U3=u3(0);
@@ -242,17 +161,19 @@ void land_q(void){
 		(void)gpioPWM(motor2,pwm2);
 		(void)gpioPWM(motor3,pwm3);
 		(void)gpioPWM(motor4,pwm4);
-		gpioSleep(0,0,2000);
+		gpioSleep(0,0,2000); //2ms sleep
 		fullstop();
 
 }
-void fullstop(void){
-(void)	gpioPWM(motor1,0);
- (void)	gpioPWM(motor2,0);
- (void)	gpioPWM(motor3,0);
- (void)	gpioPWM(motor4,0);
+void applychanges(double cont1,double cont2,double cont3,double cont4){
+	
+	w1=sqrt(cont1/(4*Kf)+ cont3/(2*Kf) + cont4/(4*Km) ); //THE OMEGA EQUATIONS FOR THE QUAD DYNAMICS
+	w2=sqrt(cont1/(4*Kf) - cont2/(2*Kf) - cont4/(4*Km) );
+	w3=sqrt(cont1/(4*Kf) - cont3/(2*Kf) + cont4/(4*Km) );
+        w4=sqrt(cont1/(4*Kf) + cont2/(2*Kf) - cont4/(4*Km) );
+	         pwm(E1,w1);
+		 pwm(E2,w2);
+		 pwm(E3,w3);
+		 pwm(E4,w4);
+	
 }
-void testincrease(void) {global_pwmhov++;}
-void testdecrease(void) {global_pwmhov--;}
-int get_pwmR(void){return pwm_range;}
-
