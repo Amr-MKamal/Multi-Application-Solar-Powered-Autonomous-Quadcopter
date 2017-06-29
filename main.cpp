@@ -21,23 +21,22 @@
 #include <unistd.h>
 #include <pigpio.h>
 #include <sched.h>
-#include "control_v0.h"
+#include "control_v2.h"
 #include "sensing.h"
+#include "ESCdriver.h"
 
 //http://abyz.co.uk/rpi/pigpio/cif.html
 //http://arma.sourceforge.net/docs.html
 //http://eigen.tuxfamily.org/index.php?title=Main_Page
 //http://www.simunova.com/node/33
-int airborn=0; 
-int ison=0; 
+int airborn=0;
+int ison=0;
 using namespace std;
 int main(){
-	cpu_set_t  mask;
-	CPU_ZERO(&mask);
-	CPU_SET(3, &mask);
-	(void) sched_setaffinity(0, sizeof(mask), &mask); //make it void
 	int volatile button=42;
 	init();
+	    fstream reader("/var/www/html/text.txt");
+//flag to readings.txt called ofile
     fstream ofile;
 	//open readings.tx/var/www/html/text.txtt
     string line;
@@ -46,7 +45,7 @@ while (1){
 
 	//read data from file readings.txt
     getline(ofile, line) ;
-    button=atoi(line.c_str());
+ button=atoi(line.c_str());
 	//close file
 	ofile.close();
 	//open file again and clear its previos contents
@@ -60,62 +59,70 @@ while (1){
 // get button from php to call this code and execute the function
 	case 1 :
 standard_forward();
-	
+usleep(760000); //sleeping for the time needed to travel 0.5 meter
+	hover_q();
 	 break;
-	case 2 :	
-if(ison){standard_left();}
-	 if(!airborn){airborn=1;}break;
+	case 2 :
+standard_left();
+	usleep(760000);
+	hover_q();
+	break;
 	case 3 :
-if(ison){standard_right();}
-			
-	 if(!airborn){airborn=1;}break;
+standard_right();
+usleep(760000);
+	hover_q();
+	break;
 	case 4 :
-if(ison){standard_backward();}
-	 if(!airborn){airborn=1;}break;	
+  standard_backward();
+  usleep(760000);
+	hover_q();
+	break;
 case 5 :
-if(ison){standard_yaw();}
-	 if(!airborn){airborn=1;}break;	
+standard_yaw();
+		
+	break;
 case 6 :
-if(ison){standard_up();}
-	 if(!airborn){airborn=1;}break;
+standard_up();
+usleep(76000); 
+	hover_q();		
+	break;
 case 7 :
-if(ison){standard_down();}
-	 if(!airborn){airborn=1;}break;
+standard_down();
+	usleep(76000);
+	hover_q();
+	break;
 case 8 :
-testincrease();break;
+u1offest++;
+hover_q();
+usleep(10000); //overwrting protection remaining the control loop at frequency
+			
+break;
 case 9 :
-testdecrease();break;
-
-case 10 :
-//changing range	
+u1offest--;
+hover_q();
+usleep(10000);
+break;
+ /*case 10 :
+//changing range
 global_pwmhov=(get_pwmR()*global_pwmhov)/100;
 set_motorSettings(100);
-break;
-case 11 :
-//changing range	
-global_pwmhov=(get_pwmR()*global_pwmhov)/255;
-set_motorSettings(255);
-break;
-case 12 :
-//changing range	
-global_pwmhov=(get_pwmR()*global_pwmhov)/1000;
-set_motorSettings(1000);
-break;
+ break; */
+/*case 11 :
+
+break; */
+/*case 12 :
+
+break; */
 case 13:
-ison=1;break;
+hover_q();
+usleep(760000);
 case 14:
-	ison=0;
- if(airborn)
- {
-	 land_q();
- airborn=0;
- }
-			break;
-			
-		case 42:
-			break;
+stop();
+break;
+
+case 42:
+break;
 	}
-	
 
 }
 	return 0;
