@@ -9,23 +9,16 @@ int E[5]={4,E1,E2,E3,E4};
 int width[NUM_GPIO];
 int used[NUM_GPIO];
 
-
 //Initializing the 4 ESC's
 void init ()
 {
     int g;
-    if (gpioInitialise() < 0) cout<<"GPIO Not Initialised\n";
+    if (gpioInitialise() < 0) cout<<"GPIO Not Initialised\n"; //initalise the library at first
     else
     {
-        for (g=1; g<5; g++)
-        {
-            gpioServo(E[g], MIN_WIDTH);
-            cout <<g<<"is initialized"<<endl;
-        }
+   for (g=1; g<5; g++)  {  gpioServo(E[g], MIN_WIDTH);  } //esc should be initalised with minmum value
     }
-
-
-    time_sleep(0.5);
+  usleep(20000);
 }
 
 //Changing The ESC Speed
@@ -37,9 +30,7 @@ void pwm (int ESC, int speed)
     if(ESC<1 || ESC>4) cout<<"invalid ESC num\n";
     else
     {
-        w = (speed*10)+1000;
-        gpioServo(E[ESC], w);
-        cout <<ESC<<"is"<<speed<<"%"<<endl;
+        gpioServo(E[ESC], speed);
     }
 }
 
@@ -47,10 +38,6 @@ void pwm (int ESC, int speed)
 void stop ()
 {
     int g;
-    for (g=1; g<5; g++)
-    {
-            gpioServo(E[g], 0);
-            cout <<g<<"is Stopped"<<endl;
-    }
+    for (g=1; g<5; g++) {gpioServo(E[g], MIN_WIDTH); } //forcing full stop
 
 }
