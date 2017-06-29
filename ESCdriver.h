@@ -17,7 +17,7 @@
 #define E4 25
 
 void init ();
-void pwm (int ESC, int speed);
+void pwm (int ESC, double w);
 void stop();
 
 #endif // ESC_H_INCLUDED
