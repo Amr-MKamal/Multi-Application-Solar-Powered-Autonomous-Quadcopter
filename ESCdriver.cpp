@@ -24,9 +24,10 @@ void init ()
 //Changing The ESC Speed
 //ESC : the ESC's Number
 //speed : the ESC's percentage
-void pwm (int ESC, int speed)
+void pwm (int ESC, double w)
 {
-    int w;
+  w= (w*MIN_WIDTH/wmax)+MIN_WIDTH
+    int speed= int(w);
     if(ESC<1 || ESC>4) cout<<"invalid ESC num\n";
     else
     {
