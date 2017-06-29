@@ -28,4 +28,4 @@ void standard_yaw(void);
 void standard_up(void);
 void standard_down(void);
 void land_q(void);
-void fullstop(void);
+void applychanges(double cont1,double cont2,double cont3,double cont4);
